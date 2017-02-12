@@ -2,9 +2,12 @@ classdef mdpGUI < handle
 % mdpGUI Compute the optimal multi-modality cancer treatment policy using
 % backward induction for stationary transition probabilities.
 %
-% Note: In general we assume that the OAR can only stay the same or get
-% worse when treating the cancer, while it can only stay the same or get
-% better when choosing not to treat the cancer.
+% Note: In general we assume that the normal tissue side effect can only 
+% stay the same or get worse when treating the cancer, while it can only 
+% stay the same or get better when choosing not to treat the cancer. 
+% Similarly, we assume that the tumor progression can only stay the same
+% or get better when treating the cancer, while it can ony stay the same
+% or get worse when choosing not to treat the cancer.
 
     properties
        mdp  % mdp object
