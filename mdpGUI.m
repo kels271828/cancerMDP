@@ -1,13 +1,6 @@
 classdef mdpGUI < handle
 % mdpGUI Compute the optimal multi-modality cancer treatment policy using
 % backward induction for stationary transition probabilities.
-%
-% Note: In general we assume that the normal tissue side effect can only 
-% stay the same or get worse when treating the cancer, while it can only 
-% stay the same or get better when choosing not to treat the cancer. 
-% Similarly, we assume that the tumor progression can only stay the same
-% or get better when treating the cancer, while it can ony stay the same
-% or get worse when choosing not to treat the cancer.
 
     properties
        mdp  % mdp object
@@ -16,8 +9,8 @@ classdef mdpGUI < handle
     end
     
     methods
-        function gui = mdpGUI(pars)
         % Initialize mdp parameters and create GUI.
+        function gui = mdpGUI(pars)
         
             % initialize mdp variables
             if exist('pars','var')
@@ -36,15 +29,14 @@ classdef mdpGUI < handle
             f = figure('Visible','off','Position',gui.pars.f);
             
             % add labels
-            background = axes('Position',[0 0 1 1],...
-                'Color','none');
+            background = axes('Position',[0 0 1 1],'Color','None');
             set(background,...
                 'XColor',get(gcf,'Color'),...
                 'YColor',get(gcf,'Color'));
             text(125,200,'State Transition Probabilities','Units','Pixels');
             text(460,200,'Reward Functions','Units','Pixels');  
-            text(380,150,'r_t =             f(\phi;        ) +         g(\tau;        )','Units','Pixels','FontSize',15);
-            text(380,110,'r_{T+1} =        f(\phi;        ) +         g(\tau;        )','Units','Pixels','FontSize',15);
+            text(396,150,'r_t =        f(\phi;        ) +        g(\tau;        )','Units','Pixels','FontSize',15);
+            text(380,110,'r_{T+1} =        f(\phi;        ) +        g(\tau;        )','Units','Pixels','FontSize',15);
              
             % create transition probability input tables
             mLabels = cell(1,gui.mdp.numActions);
@@ -68,7 +60,6 @@ classdef mdpGUI < handle
                 pTables{2,i} = uitable('CreateFcn',{@gui.pCreate,2,i});
             end
            
-
             % create inputs for epochs, discount factor, and reward functions
             scaleInputs1 = cell(1,2);
             scaleInputs2 = cell(1,2);
@@ -97,8 +88,8 @@ classdef mdpGUI < handle
             set(f,'Visible','on'); 
         end
         
-        function pars = setPars(gui)
         % Set GUI parameters.
+        function pars = setPars(gui)
         
             % width and height
             s2W = 94;  s2H = 39; % tumor transition input tables
@@ -119,7 +110,7 @@ classdef mdpGUI < handle
             s1B = s2B+s2H+m2H+15;  s1L = pars.border; 
             m1B = s1B+s1H;     m1L  = pars.border;
             mB  = s1B+s1H+2*m1H;  mL  = pars.border+s2W/2-10;       
-            bB  = s2B;    bL  = pars.border+gui.mdp.numActions*pars.column;
+            bB  = s2B;    bL  = pars.border+gui.mdp.numActions*pars.column + 70;
             
             % set alignment parameters
             pars.f  = [500 500 650 225];
@@ -135,15 +126,15 @@ classdef mdpGUI < handle
             pars.mStrings2 = {'Side Effect','Tumor Progression'};
         end
         
-        function func = setFunc(gui)
         % Set reward function parameters.
+        function func = setFunc(gui)
         
             % side effect function parameters
-            func.c = {0,1/3}; % scale coefficient
+            func.c = {0,1/2}; % scale coefficient
             func.p = {2,2};   % exponent
             
             % tumor progression function parameters
-            func.d = {0,2/3}; % scale coefficient
+            func.d = {0,1/2}; % scale coefficient
             func.q = {2,2};   % exponent
             
             % set individual functions
@@ -157,6 +148,7 @@ classdef mdpGUI < handle
                 func.g(func.d{2},func.q{2},S);
         end
         
+        % Create input for side effect coefficients.
         function scaleCreate1(gui,hObject,~,i)
             % create input
             if i == 1
@@ -171,6 +163,7 @@ classdef mdpGUI < handle
                 'Style','edit');
         end
         
+        % Create input for side effect exponents.
         function expCreate1(gui,hObject,~,i)
             % create input
             if i == 1
@@ -185,6 +178,7 @@ classdef mdpGUI < handle
                 'Style','edit');
         end
         
+        % Create input for tumor progression coefficients.
         function scaleCreate2(gui,hObject,~,i)
             % create input
             if i == 1
@@ -199,6 +193,7 @@ classdef mdpGUI < handle
                 'Style','edit');
         end
         
+        % Create input for tumor progression exponents.
         function expCreate2(gui,hObject,~,i)
             % create input
             if i == 1
@@ -213,8 +208,8 @@ classdef mdpGUI < handle
                 'Style','edit');
         end
         
-        function pCreate(gui,hObject,~,i,j)
         % Create transition probability input table.
+        function pCreate(gui,hObject,~,i,j)
         
             % set labels and position
             if i == 1
@@ -237,6 +232,7 @@ classdef mdpGUI < handle
                 'RowName',{});
         end
         
+        % Update side-effect coefficients.
         function cCallback(gui,hObject,~,i)
             newC = str2double(get(hObject,'String'));
             gui.func.c{i} = newC;
@@ -244,6 +240,7 @@ classdef mdpGUI < handle
             	gui.func.g(gui.func.d{i},gui.func.q{i},S);
         end
         
+        % Update side effect exponents.
         function dCallback(gui,hObject,~,i)
             newD = str2double(get(hObject,'String'));
             gui.func.d{i} = newD;
@@ -251,6 +248,7 @@ classdef mdpGUI < handle
             	gui.func.g(gui.func.d{i},gui.func.q{i},S);
         end
         
+        % Update tumor progression coefficients.
         function ppCallback(gui,hObject,~,i)
             newP = str2double(get(hObject,'String'));
             gui.func.p{i} = newP;
@@ -258,6 +256,7 @@ classdef mdpGUI < handle
             	gui.func.g(gui.func.d{i},gui.func.q{i},S);
         end
         
+        % Update tumor progression exponents.
         function qCallback(gui,hObject,~,i)
             newQ = str2double(get(hObject,'String'));
             gui.func.q{i} = newQ;
@@ -265,8 +264,8 @@ classdef mdpGUI < handle
             	gui.func.g(gui.func.d{i},gui.func.q{i},S);
         end
         
-        function pCallback(gui,hObject,eventdata,i,j)
         % Update transition probabilities.
+        function pCallback(gui,hObject,eventdata,i,j)
             
             % store values
             newP = str2double(eventdata.EditData);
@@ -287,11 +286,11 @@ classdef mdpGUI < handle
             end
         end
         
-        function bCallback(gui,~,~)
         % Compute optimal policy.
+        function bCallback(gui,~,~)
             
             gui.mdp.calcPolicy();
-            gui.mdp.plotPolicy(1); % 1 = display legend
+            gui.mdp.plotPolicy();
         end
     end
 end
