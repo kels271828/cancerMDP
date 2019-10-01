@@ -10,3 +10,4 @@ There are several different modalities, e.g., surgery, chemotherapy, and radioth
 ## Code
 * [Main](https://github.com/kels271828/cancerMDP/blob/master/mdpMain.m): Compute the optimal multi-modality cancer treatment policy using backward induction for stationary transition probabilities
 * [GUI](https://github.com/kels271828/cancerMDP/blob/master/mdpGUI.m): Interactive GUI that allows user to experiment with different transition probabilities and reward functions for three treatment modalities and three treatment periods
+* [Examples](https://github.com/kels271828/cancerMDP/blob/master/examples.m): Code to reproduce the examples from our paper
